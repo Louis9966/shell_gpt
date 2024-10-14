@@ -23,7 +23,11 @@ from sgpt.utils import (
 )
 
 
+## Typer 库定义命令行接口 (CLI) 的代码片段，Typer 是一个帮助开发者创建易于使用的命令行应用程序的 Python 库。
+
 def main(
+    #prompt 是函数的一个参数，它的类型是 str，并且使用 typer.Argument() 进行详细的配置。
+    # typer.Argument() 允许你为命令行中的位置参数提供选项配置：
     prompt: str = typer.Argument(
         "",
         show_default=False,
@@ -160,14 +164,14 @@ def main(
 
     if stdin_passed:
         stdin = ""
-        # TODO: This is very hacky.
-        # In some cases, we need to pass stdin along with inputs.
-        # When we want part of stdin to be used as a init prompt,
-        # but rest of the stdin to be used as a inputs. For example:
+        # TODO: 这种处理方式非常临时。
+        # 在某些情况下，我们需要将标准输入与输入一起传递。
+        # 当我们希望部分标准输入用作初始化提示，
+        # 而其余的标准输入用作交互式输入。例如：
         # echo "hello\n__sgpt__eof__\nThis is input" | sgpt --repl temp
-        # In this case, "hello" will be used as a init prompt, and
-        # "This is input" will be used as "interactive" input to the REPL.
-        # This is useful to test REPL with some initial context.
+        # 在这种情况下，“hello”将用作初始化提示，
+        # 而“This is input”将作为“交互式”输入到REPL。
+        # 这对于带有初始上下文测试REPL很有用。
         for line in sys.stdin:
             if "__sgpt__eof__" in line:
                 break
@@ -185,14 +189,14 @@ def main(
 
     if sum((shell, describe_shell, code)) > 1:
         raise BadArgumentUsage(
-            "Only one of --shell, --describe-shell, and --code options can be used at a time."
+            "一次只能使用 --shell、--describe-shell 和 --code 选项中的一个。"
         )
 
     if chat and repl:
-        raise BadArgumentUsage("--chat and --repl options cannot be used together.")
+        raise BadArgumentUsage("--chat 和 --repl 选项不能同时使用。")
 
     if editor and stdin_passed:
-        raise BadArgumentUsage("--editor option cannot be used with stdin input.")
+        raise BadArgumentUsage("--editor 选项不能与标准输入一起使用。")
 
     if editor:
         prompt = get_edited_prompt()

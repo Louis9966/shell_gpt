@@ -13,8 +13,7 @@ from sgpt.integration import bash_integration, zsh_integration
 
 def get_edited_prompt() -> str:
     """
-    Opens the user's default editor to let them
-    input a prompt, and returns the edited text.
+    用户的默认编辑器以让他们输入提示，并返回编辑后的文本。
 
     :return: String prompt.
     """
@@ -29,15 +28,15 @@ def get_edited_prompt() -> str:
         output = file.read()
     os.remove(file_path)
     if not output:
-        raise BadParameter("Couldn't get valid PROMPT from $EDITOR")
+        raise BadParameter("无法从 $EDITOR 获取有效的 PROMPT。")
     return output
 
 
 def run_command(command: str) -> None:
     """
-    Runs a command in the user's shell.
-    It is aware of the current user's $SHELL.
-    :param command: A shell command to run.
+     在用户的shell中运行一个命令。
+     它会识别当前用户的 $SHELL 环境变量。
+    :param command: 要运行的 shell 命令。
     """
     if platform.system() == "Windows":
         is_powershell = len(os.getenv("PSModulePath", "").split(os.pathsep)) >= 3
