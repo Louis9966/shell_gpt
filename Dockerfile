@@ -1,12 +1,11 @@
 FROM swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/python:3.10-slim
 
-ENV SHELL_INTERACTION=false
-ENV PRETTIFY_MARKDOWN=false
+ENV SHELL_INTERACTION=true
+ENV PRETTIFY_MARKDOWN=true
 ENV OS_NAME=auto
 ENV SHELL_NAME=auto
 
-ENV PYTHONUNBUFFERED=1
-ENV PYTHONTHREADS=1
+
 ENV TZ=Asia/Shanghai
 
 WORKDIR /app
@@ -20,7 +19,7 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN pip install litellm
+#RUN pip install litellm
 
 
 RUN pip install --no-cache /app && mkdir -p /tmp/shell_gpt

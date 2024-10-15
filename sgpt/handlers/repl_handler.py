@@ -28,11 +28,11 @@ class ReplHandler(ChatHandler):
             rich_print(Rule(style="bold magenta"))
 
         info_message = (
-            "Entering REPL mode, press Ctrl+C to exit."
+            "进入连续对话模式（REPL）, 按 Ctrl+C 退出。"
             if not self.role.name == DefaultRoles.SHELL.value
             else (
-                "Entering shell REPL mode, type [e] to execute commands "
-                "or [d] to describe the commands, press Ctrl+C to exit."
+                "进入连续对话模式（REPL）, 按 [e] 执行命令 "
+                "或者 [d] 去描述命令, 按 Ctrl+C 退出."
             )
         )
         typer.secho(info_message, fg="yellow")

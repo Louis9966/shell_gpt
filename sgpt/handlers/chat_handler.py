@@ -18,10 +18,9 @@ CHAT_CACHE_PATH = Path(cfg.get("CHAT_CACHE_PATH"))
 
 class ChatSession:
     """
-    This class is used as a decorator for OpenAI chat API requests.
-    The ChatSession class caches chat messages and keeps track of the
-    conversation history. It is designed to store cached messages
-    in a specified directory and in JSON format.
+此类用作装饰器以处理针对OpenAI聊天API的请求。
+ChatSession 类会缓存聊天消息并跟踪对话历史。
+它的设计目的是将缓存的消息存储在指定目录中，并且采用JSON格式。
     """
 
     def __init__(self, length: int, storage_path: Path):

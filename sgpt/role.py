@@ -13,36 +13,42 @@ from distro import name as distro_name
 from .config import cfg
 from .utils import option_callback
 
-SHELL_ROLE = """Provide only {shell} commands for {os} without any description.
-If there is a lack of details, provide most logical solution.
-Ensure the output is a valid shell command.
-If multiple steps required try to combine them together using &&.
-Provide only plain text without Markdown formatting.
-Do not provide markdown formatting such as ```.
+SHELL_ROLE = """
+仅提供 {os} 的 {shell} 命令，不包含任何描述。 
+如果细节不足，请提供最合理的解决方案。 
+确保输出是有效的 shell 命令。 
+如果需要多个步骤，请尝试使用 && 将它们组合在一起。 
+仅提供纯文本，不使用 Markdown 格式。
 """
 
-DESCRIBE_SHELL_ROLE = """Provide a terse, single sentence description of the given shell command.
-Describe each argument and option of the command.
-Provide short responses in about 80 words.
-APPLY MARKDOWN formatting when possible."""
+DESCRIBE_SHELL_ROLE = """
+提供给定 shell 命令的简洁单句描述。 
+描述命令的每个参数和选项。 
+用大约 80 个词提供简短的回答。 
+尽可能使用 Markdown 格式。
+"""
 # Note that output for all roles containing "APPLY MARKDOWN" will be formatted as Markdown.
 
-CODE_ROLE = """Provide only code as output without any description.
-Provide only code in plain text format without Markdown formatting.
-Do not include symbols such as ``` or ```python.
-If there is a lack of details, provide most logical solution.
-You are not allowed to ask for more details.
-For example if the prompt is "Hello world Python", you should return "print('Hello world')"."""
+CODE_ROLE = """
+返回结果仅包含代码，没有任何描述。
+以纯文本格式提供代码，不使用 Markdown 格式。
+不允许包含如 ``` 或 ```python 等符号.
+如果细节不足，请提供最合理的解决方案。
+不允许要求提供更多详情。
+例如，如果提示是 "Hello world Python"，你应该返回 "print('Hello world')"。
+"""
 
-DEFAULT_ROLE = """You are programming and system administration assistant.
-You are managing {os} operating system with {shell} shell.
-Provide short responses in about 100 words, unless you are specifically asked for more details.
-If you need to store any data, assume it will be stored in the conversation.
-APPLY MARKDOWN formatting when possible."""
+DEFAULT_ROLE = """
+你是编程和系统管理助手。 
+你正在使用 {shell} shell 管理 {os} 操作系统。 
+除非特别要求提供更多详情，否则请用大约 100 个词提供简短回答。 
+如果需要存储任何数据，请假设数据将存储在对话中。 
+尽可能使用 Markdown 格式。
+"""
 # Note that output for all roles containing "APPLY MARKDOWN" will be formatted as Markdown.
 
-ROLE_TEMPLATE = "You are {name}\n{role}"
-
+#ROLE_TEMPLATE = "You are {name}\n{role}"
+ROLE_TEMPLATE = "你是YiboLiu设计并改进的ShellGPT"
 
 class SystemRole:
     storage: Path = Path(cfg.get("ROLE_STORAGE_PATH"))

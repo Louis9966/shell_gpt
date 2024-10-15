@@ -23,7 +23,26 @@ from sgpt.utils import (
 )
 
 
-## Typer 库定义命令行接口 (CLI) 的代码片段，Typer 是一个帮助开发者创建易于使用的命令行应用程序的 Python 库。
+## Typer 库定义命令行接口 (CLI) 的代码片段，
+# Typer 是一个帮助开发者创建易于使用的命令行应用程序的 Python 库。
+
+#定义危险命令
+dangerous_commands = [
+    "rm -rf /",          # 删除根目录下的所有文件
+    "dd if=/dev/zero of=/dev/sda", # 将硬盘写入空数据，会导致数据丢失
+    "mkfs.ext4 /dev/sda1", # 格式化硬盘，会导致分区数据丢失
+    ":(){ :|:& };:",     # Fork炸弹，快速消耗系统资源
+    "shutdown -h now",   # 关闭系统
+    "halt",              # 停止所有CPU功能
+    "init 0",            # 关闭系统
+    "mv /home/* /dev/null", # 移动用户目录到无底洞，导致数据丢失
+    "chmod -R 777 /",    # 更改根目录权限，安全隐患
+    "echo c > /proc/sysrq-trigger" # 触发崩溃
+]
+
+def contains_dangerous_command(output: str, commands: list) -> bool:
+    """检查输出中是否包含危险命令"""
+    return any(command in output for command in commands)
 
 def main(
     #prompt 是函数的一个参数，它的类型是 str，并且使用 typer.Argument() 进行详细的配置。
@@ -53,6 +72,7 @@ def main(
         cfg.get("PRETTIFY_MARKDOWN") == "true",
         help="Prettify markdown output.",
     ),
+    # shell: bool = typer.Option(
     shell: bool = typer.Option(
         False,
         "--shell",
@@ -240,13 +260,25 @@ def main(
         )
 
     while shell and interaction:
-        option = typer.prompt(
-            text="[E]xecute, [D]escribe, [A]bort",
-            type=Choice(("e", "d", "a", "y"), case_sensitive=False),
-            default="e" if cfg.get("DEFAULT_EXECUTE_SHELL_CMD") == "true" else "a",
-            show_choices=False,
-            show_default=False,
-        )
+        # 检查full_completion是否包含危险命令
+        if contains_dangerous_command(full_completion, dangerous_commands):
+            typer.echo("警告: 操作可能包含危险命令，自动放弃执行。")
+            option = 'a'  # 自动选择放弃执行
+        else:
+            option = typer.prompt(
+                text="[E]xecute, [D]escribe, [A]bort",
+                type=Choice(("e", "d", "a", "y"), case_sensitive=False),
+                default="e" if cfg.get("DEFAULT_EXECUTE_SHELL_CMD") == "true" else "a",
+                show_choices=False,
+                show_default=False,
+            )
+        # option = typer.prompt(
+        #     text="[E]xecute, [D]escribe, [A]bort",
+        #     type=Choice(("e", "d", "a", "y"), case_sensitive=False),
+        #     default="e" if cfg.get("DEFAULT_EXECUTE_SHELL_CMD") == "true" else "a",
+        #     show_choices=False,
+        #     show_default=False,
+        # )
         if option in ("e", "y"):
             # "y" option is for keeping compatibility with old version.
             run_command(full_completion)
